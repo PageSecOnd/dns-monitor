@@ -5,6 +5,10 @@ services:
     build:
       context: ..
       dockerfile: docker/Dockerfile
+      args:
+        APT_MIRROR: ${APT_MIRROR:-mirrors.aliyun.com}
+        PIP_MIRROR: ${PIP_MIRROR:-mirrors.aliyun.com}
+        USE_CHINA_MIRRORS: ${USE_CHINA_MIRRORS:-true}
     container_name: dns-monitor
     restart: unless-stopped
     ports:

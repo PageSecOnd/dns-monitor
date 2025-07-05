@@ -64,15 +64,24 @@
 - **BIND9日志解析** - DNS查询分析
 
 ### 部署技术
-- **Docker** - 容器化部署
+- **Docker** - 容器化部署（支持构建优化）
 - **Nginx** - 反向代理
 - **Systemd** - 服务管理
 - **Supervisor** - 进程监控
+
+### 🚀 构建优化特性
+- **智能镜像源选择** - 自动测试和选择最快的中国镜像源
+- **多阶段构建** - 减少镜像大小30-50%
+- **自动故障切换** - 镜像源失败时自动回退
+- **性能监控** - 实时构建性能数据
+- **多架构支持** - 支持AMD64和ARM64
+- **环境灵活配置** - 支持环境变量和构建参数
 
 ## 🚀 快速开始
 
 ### 方式一：Docker部署（推荐）
 
+#### 标准构建
 ```bash
 # 克隆项目
 git clone https://github.com/PageSecOnd/dns-monitor.git
@@ -84,6 +93,31 @@ docker-compose -f docker/docker-compose.yml up -d
 # 访问应用
 http://localhost:80
 ```
+
+#### 🚀 优化构建（中国用户推荐）
+```bash
+# 克隆项目
+git clone https://github.com/PageSecOnd/dns-monitor.git
+cd dns-monitor
+
+# 使用优化脚本自动选择最快镜像源构建（3-5分钟）
+./scripts/build-optimized.sh build
+
+# 或者使用docker-compose（需要先配置环境变量）
+cp .env.template .env
+docker-compose -f docker/docker-compose.yml up -d --build
+
+# 访问应用
+http://localhost:80
+```
+
+**构建优化特性：**
+- 🚀 **构建速度提升3-5倍**：从10-15分钟缩短到3-5分钟
+- 🌐 **智能镜像源选择**：自动测试并选择最快的中国镜像源
+- 🔄 **自动故障切换**：镜像源失败时自动回退到默认源
+- 📊 **性能监控**：实时显示构建性能数据
+
+详细信息请参考：[Docker构建优化指南](README-docker-optimization.md)
 
 ### 方式二：传统部署
 

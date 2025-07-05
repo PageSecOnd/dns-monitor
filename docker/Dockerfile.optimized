@@ -6,29 +6,18 @@ ARG APT_MIRROR=mirrors.aliyun.com
 ARG PIP_MIRROR=mirrors.aliyun.com
 ARG USE_CHINA_MIRRORS=true
 
-# Configure Chinese mirror sources for faster package installation
+# Create Chinese mirror sources if enabled
 RUN if [ "$USE_CHINA_MIRRORS" = "true" ]; then \
-    # Check if sources.list exists, if not create it
-    if [ ! -f /etc/apt/sources.list ]; then \
-        # For newer Debian versions that use DEB822 format
-        if [ -d /etc/apt/sources.list.d ]; then \
-            echo "deb https://$APT_MIRROR/debian/ bookworm main" > /etc/apt/sources.list && \
-            echo "deb https://$APT_MIRROR/debian/ bookworm-updates main" >> /etc/apt/sources.list && \
-            echo "deb https://$APT_MIRROR/debian-security/ bookworm-security main" >> /etc/apt/sources.list; \
-        fi; \
-    else \
-        # Backup original sources
-        cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
-        # Replace with Chinese mirror sources
-        sed -i "s/deb.debian.org/$APT_MIRROR/g" /etc/apt/sources.list && \
-        sed -i "s/security.debian.org/$APT_MIRROR/g" /etc/apt/sources.list && \
-        sed -i "s|http://|https://|g" /etc/apt/sources.list; \
-    fi; \
+    # Create new sources.list with Chinese mirror
+    echo "deb https://$APT_MIRROR/debian/ bookworm main" > /etc/apt/sources.list && \
+    echo "deb https://$APT_MIRROR/debian/ bookworm-updates main" >> /etc/apt/sources.list && \
+    echo "deb https://$APT_MIRROR/debian-security/ bookworm-security main" >> /etc/apt/sources.list; \
     fi
 
 # Install build dependencies
 RUN apt-get update && apt-get install -y \
     build-essential \
+    gcc \
     && rm -rf /var/lib/apt/lists/* \
     && apt-get clean
 
@@ -42,10 +31,12 @@ RUN if [ "$USE_CHINA_MIRRORS" = "true" ]; then \
     echo "retries = 5" >> /root/.pip/pip.conf; \
     fi
 
+# Upgrade pip
+RUN pip install --no-cache-dir --upgrade pip
+
 # Copy requirements and install Python dependencies
 COPY backend/requirements.txt /app/requirements.txt
-RUN pip install --no-cache-dir --upgrade pip && \
-    pip install --no-cache-dir -r /app/requirements.txt
+RUN pip install --no-cache-dir -r /app/requirements.txt
 
 # Production stage
 FROM python:3.11-slim
@@ -60,24 +51,12 @@ ARG USE_CHINA_MIRRORS=true
 # Set working directory
 WORKDIR /app
 
-# Configure Chinese mirror sources for faster package installation
+# Create Chinese mirror sources if enabled
 RUN if [ "$USE_CHINA_MIRRORS" = "true" ]; then \
-    # Check if sources.list exists, if not create it
-    if [ ! -f /etc/apt/sources.list ]; then \
-        # For newer Debian versions that use DEB822 format
-        if [ -d /etc/apt/sources.list.d ]; then \
-            echo "deb https://$APT_MIRROR/debian/ bookworm main" > /etc/apt/sources.list && \
-            echo "deb https://$APT_MIRROR/debian/ bookworm-updates main" >> /etc/apt/sources.list && \
-            echo "deb https://$APT_MIRROR/debian-security/ bookworm-security main" >> /etc/apt/sources.list; \
-        fi; \
-    else \
-        # Backup original sources
-        cp /etc/apt/sources.list /etc/apt/sources.list.bak && \
-        # Replace with Chinese mirror sources
-        sed -i "s/deb.debian.org/$APT_MIRROR/g" /etc/apt/sources.list && \
-        sed -i "s/security.debian.org/$APT_MIRROR/g" /etc/apt/sources.list && \
-        sed -i "s|http://|https://|g" /etc/apt/sources.list; \
-    fi; \
+    # Create new sources.list with Chinese mirror
+    echo "deb https://$APT_MIRROR/debian/ bookworm main" > /etc/apt/sources.list && \
+    echo "deb https://$APT_MIRROR/debian/ bookworm-updates main" >> /etc/apt/sources.list && \
+    echo "deb https://$APT_MIRROR/debian-security/ bookworm-security main" >> /etc/apt/sources.list; \
     fi
 
 # Install only runtime dependencies
