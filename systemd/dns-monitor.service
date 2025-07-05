@@ -1,0 +1,34 @@
+[Unit]
+Description=DNS Monitor Service
+After=network.target
+Wants=network.target
+
+[Service]
+Type=simple
+User=www-data
+Group=www-data
+WorkingDirectory=/opt/dns-monitor
+Environment=PYTHONPATH=/opt/dns-monitor
+ExecStart=/usr/bin/python3 /opt/dns-monitor/backend/app.py
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=always
+RestartSec=10
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=dns-monitor
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/opt/dns-monitor/backend/data
+ReadOnlyPaths=/var/log/named /var/log/bind /etc/bind
+
+# Resource limits
+LimitNOFILE=65536
+MemoryMax=512M
+CPUQuota=200%
+
+[Install]
+WantedBy=multi-user.target

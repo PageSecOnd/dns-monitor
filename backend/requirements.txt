@@ -5,4 +5,3 @@ python-socketio==5.8.0
 python-engineio==4.7.1
 eventlet==0.33.3
 requests==2.31.0
-sqlite3
