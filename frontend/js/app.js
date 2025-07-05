@@ -236,7 +236,7 @@ class DNSMonitor {
         this.updateDNSServiceStatus(dnsData.bind_status);
         
         // Update query statistics
-        this.updateQueryStats(dnsData.query_stats);
+        this.updateQueryStats(dnsData.query_stats, dnsData.response_times);
         
         // Update recent queries
         this.updateRecentQueries(dnsData.recent_queries);
@@ -269,17 +269,19 @@ class DNSMonitor {
         this.updateStatus('dns-service-status', overallStatus);
     }
     
-    updateQueryStats(queryStats) {
+    updateQueryStats(queryStats, responseTimes) {
         if (!queryStats) return;
         
         const total = queryStats.total_queries || 0;
         const qps = queryStats.qps || 0;
         const perMinute = queryStats.queries_per_minute || 0;
+        const avgResponseTime = responseTimes?.average || 0;
         
         // Update display values with animation
         this.updateElementWithAnimation('total-queries', total);
         this.updateElementWithAnimation('queries-per-second', qps.toFixed(2));
         this.updateElementWithAnimation('queries-per-minute', perMinute);
+        this.updateElementWithAnimation('avg-response-time', avgResponseTime.toFixed(2));
     }
     
     updateRecentQueries(queries) {
