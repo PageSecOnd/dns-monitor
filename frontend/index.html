@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DNS服务器监控系统</title>
+    <link rel="stylesheet" href="css/style.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/responsive.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.7.2/socket.io.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Particle Background -->
+    <div id="particles-js"></div>
+    
+    <!-- Header -->
+    <header class="header">
+        <div class="container">
+            <h1 class="logo">
+                <span class="logo-icon">🌐</span>
+                DNS监控系统
+            </h1>
+            <div class="header-stats">
+                <div class="stat-item">
+                    <span class="stat-label">状态</span>
+                    <span class="stat-value" id="system-status">在线</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">连接</span>
+                    <span class="stat-value" id="connection-status">已连接</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">时间</span>
+                    <span class="stat-value" id="current-time">--:--:--</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            
+            <!-- System Overview -->
+            <section class="overview-section">
+                <h2 class="section-title">系统概览</h2>
+                <div class="overview-grid">
+                    
+                    <!-- CPU Monitor -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">CPU使用率</h3>
+                            <div class="card-status" id="cpu-status">正常</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="gauge-container">
+                                <canvas id="cpu-gauge" width="200" height="200"></canvas>
+                                <div class="gauge-value">
+                                    <span id="cpu-percent">0</span>%
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat">
+                                    <span class="stat-label">核心数</span>
+                                    <span class="stat-value" id="cpu-cores">0</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">频率</span>
+                                    <span class="stat-value" id="cpu-freq">0 GHz</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Memory Monitor -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">内存使用率</h3>
+                            <div class="card-status" id="memory-status">正常</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="memory-progress"></div>
+                                </div>
+                                <div class="progress-label">
+                                    <span id="memory-percent">0%</span>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat">
+                                    <span class="stat-label">已用</span>
+                                    <span class="stat-value" id="memory-used">0 GB</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">总计</span>
+                                    <span class="stat-value" id="memory-total">0 GB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Disk Monitor -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">磁盘使用率</h3>
+                            <div class="card-status" id="disk-status">正常</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="progress-container">
+                                <div class="progress-bar">
+                                    <div class="progress-fill" id="disk-progress"></div>
+                                </div>
+                                <div class="progress-label">
+                                    <span id="disk-percent">0%</span>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat">
+                                    <span class="stat-label">已用</span>
+                                    <span class="stat-value" id="disk-used">0 GB</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">总计</span>
+                                    <span class="stat-value" id="disk-total">0 GB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Network Monitor -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">网络流量</h3>
+                            <div class="card-status" id="network-status">正常</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="network-stats">
+                                <div class="network-item">
+                                    <span class="network-label">上传</span>
+                                    <span class="network-value" id="network-upload">0 KB/s</span>
+                                </div>
+                                <div class="network-item">
+                                    <span class="network-label">下载</span>
+                                    <span class="network-value" id="network-download">0 KB/s</span>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat">
+                                    <span class="stat-label">已发送</span>
+                                    <span class="stat-value" id="network-sent">0 MB</span>
+                                </div>
+                                <div class="stat">
+                                    <span class="stat-label">已接收</span>
+                                    <span class="stat-value" id="network-recv">0 MB</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- System Load -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">系统负载</h3>
+                            <div class="card-status" id="load-status">正常</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="load-meters">
+                                <div class="load-meter">
+                                    <span class="load-label">1分钟</span>
+                                    <span class="load-value" id="load-1min">0.00</span>
+                                </div>
+                                <div class="load-meter">
+                                    <span class="load-label">5分钟</span>
+                                    <span class="load-value" id="load-5min">0.00</span>
+                                </div>
+                                <div class="load-meter">
+                                    <span class="load-label">15分钟</span>
+                                    <span class="load-value" id="load-15min">0.00</span>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat">
+                                    <span class="stat-label">运行时间</span>
+                                    <span class="stat-value" id="system-uptime">0 天</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- DNS Service Status -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">DNS服务状态</h3>
+                            <div class="card-status" id="dns-service-status">正常</div>
+                        </div>
+                        <div class="card-body">
+                            <div class="service-indicators">
+                                <div class="indicator">
+                                    <span class="indicator-light" id="bind-process-light"></span>
+                                    <span class="indicator-label">BIND9进程</span>
+                                </div>
+                                <div class="indicator">
+                                    <span class="indicator-light" id="bind-service-light"></span>
+                                    <span class="indicator-label">系统服务</span>
+                                </div>
+                                <div class="indicator">
+                                    <span class="indicator-light" id="bind-config-light"></span>
+                                    <span class="indicator-label">配置文件</span>
+                                </div>
+                            </div>
+                            <div class="stats-row">
+                                <div class="stat">
+                                    <span class="stat-label">版本</span>
+                                    <span class="stat-value" id="bind-version">--</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- DNS Statistics -->
+            <section class="dns-section">
+                <h2 class="section-title">DNS统计信息</h2>
+                <div class="dns-grid">
+                    
+                    <!-- Query Statistics -->
+                    <div class="monitor-card large-card">
+                        <div class="card-header">
+                            <h3 class="card-title">查询统计</h3>
+                            <div class="card-actions">
+                                <button class="action-btn" id="refresh-queries">刷新</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="query-stats">
+                                <div class="stat-item">
+                                    <span class="stat-number" id="total-queries">0</span>
+                                    <span class="stat-label">总查询数</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="queries-per-second">0</span>
+                                    <span class="stat-label">QPS</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="queries-per-minute">0</span>
+                                    <span class="stat-label">每分钟查询</span>
+                                </div>
+                                <div class="stat-item">
+                                    <span class="stat-number" id="avg-response-time">0</span>
+                                    <span class="stat-label">平均响应时间(ms)</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Query Type Distribution -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">查询类型分布</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="query-type-chart" width="300" height="200"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Response Time Chart -->
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">响应时间趋势</h3>
+                        </div>
+                        <div class="card-body">
+                            <canvas id="response-time-chart" width="300" height="200"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Real-time Queries -->
+            <section class="queries-section">
+                <h2 class="section-title">实时查询</h2>
+                <div class="queries-container">
+                    <div class="monitor-card full-width">
+                        <div class="card-header">
+                            <h3 class="card-title">当前DNS查询</h3>
+                            <div class="card-actions">
+                                <button class="action-btn" id="clear-queries">清除</button>
+                                <button class="action-btn" id="pause-queries">暂停</button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="queries-table-container">
+                                <table class="queries-table">
+                                    <thead>
+                                        <tr>
+                                            <th>时间</th>
+                                            <th>客户端IP</th>
+                                            <th>查询域名</th>
+                                            <th>查询类型</th>
+                                            <th>响应时间</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="queries-table-body">
+                                        <!-- Real-time queries will be inserted here -->
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Top Domains -->
+            <section class="domains-section">
+                <h2 class="section-title">热门域名</h2>
+                <div class="domains-container">
+                    <div class="monitor-card">
+                        <div class="card-header">
+                            <h3 class="card-title">TOP 10 查询域名</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="domains-list" id="top-domains-list">
+                                <!-- Top domains will be inserted here -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <p>&copy; 2024 DNS监控系统. 版权所有.</p>
+        </div>
+    </footer>
+
+    <!-- Loading Overlay -->
+    <div id="loading-overlay" class="loading-overlay">
+        <div class="loading-spinner"></div>
+        <p>正在加载监控数据...</p>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/particles.js/2.0.0/particles.min.js"></script>
+    <script src="js/particles-config.js"></script>
+    <script src="js/app.js"></script>
+    <script src="js/charts.js"></script>
+    <script src="js/websocket.js"></script>
+    <script src="js/utils.js"></script>
+</body>
+</html>

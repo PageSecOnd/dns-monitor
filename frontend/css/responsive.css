@@ -1,0 +1,511 @@
+/* DNS Monitor - Responsive Styles */
+
+/* Tablet Styles */
+@media (max-width: 1024px) {
+    .container {
+        padding: 0 var(--spacing-md);
+    }
+    
+    .overview-grid {
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: var(--spacing-md);
+    }
+    
+    .dns-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .large-card {
+        grid-column: span 1;
+    }
+    
+    .header .container {
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .header-stats {
+        gap: var(--spacing-lg);
+    }
+    
+    .logo {
+        font-size: var(--font-2xl);
+    }
+    
+    .section-title {
+        font-size: var(--font-xl);
+    }
+    
+    .queries-table {
+        font-size: var(--font-xs);
+    }
+    
+    .queries-table th,
+    .queries-table td {
+        padding: var(--spacing-xs);
+    }
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+    .container {
+        padding: 0 var(--spacing-sm);
+    }
+    
+    .header .container {
+        flex-direction: column;
+        gap: var(--spacing-md);
+        text-align: center;
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+    
+    .header-stats {
+        flex-direction: row;
+        gap: var(--spacing-md);
+        width: 100%;
+        justify-content: space-around;
+    }
+    
+    .logo {
+        font-size: var(--font-xl);
+    }
+    
+    .logo-icon {
+        font-size: var(--font-2xl);
+    }
+    
+    .overview-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .dns-grid {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-md);
+    }
+    
+    .monitor-card {
+        padding: var(--spacing-md);
+    }
+    
+    .card-header {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+        text-align: center;
+    }
+    
+    .card-actions {
+        justify-content: center;
+    }
+    
+    .section-title {
+        font-size: var(--font-lg);
+        margin-bottom: var(--spacing-lg);
+    }
+    
+    .main-content {
+        padding: var(--spacing-xl) 0;
+    }
+    
+    /* Gauge adjustments */
+    .gauge-container canvas {
+        max-width: 150px;
+        max-height: 150px;
+    }
+    
+    .gauge-value {
+        font-size: var(--font-xl);
+    }
+    
+    /* Stats grid adjustments */
+    .stats-row {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .query-stats {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--spacing-md);
+    }
+    
+    .stat-number {
+        font-size: var(--font-2xl);
+    }
+    
+    /* Network stats adjustments */
+    .network-stats {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .network-value {
+        font-size: var(--font-lg);
+    }
+    
+    /* Load meters adjustments */
+    .load-meters {
+        flex-direction: column;
+        gap: var(--spacing-md);
+    }
+    
+    .load-value {
+        font-size: var(--font-lg);
+    }
+    
+    /* Service indicators adjustments */
+    .service-indicators {
+        align-items: center;
+    }
+    
+    .indicator {
+        justify-content: center;
+    }
+    
+    /* Table adjustments */
+    .queries-table-container {
+        max-height: 300px;
+    }
+    
+    .queries-table {
+        font-size: var(--font-xs);
+    }
+    
+    .queries-table th,
+    .queries-table td {
+        padding: var(--spacing-xs);
+    }
+    
+    /* Hide less important columns on mobile */
+    .queries-table th:nth-child(5),
+    .queries-table td:nth-child(5) {
+        display: none;
+    }
+    
+    /* Domains list adjustments */
+    .domains-list {
+        gap: var(--spacing-xs);
+    }
+    
+    .domain-item {
+        padding: var(--spacing-xs);
+    }
+    
+    .domain-name {
+        font-size: var(--font-sm);
+        word-break: break-all;
+    }
+    
+    .domain-count {
+        font-size: var(--font-xs);
+        white-space: nowrap;
+    }
+}
+
+/* Small Mobile Styles */
+@media (max-width: 480px) {
+    .container {
+        padding: 0 var(--spacing-xs);
+    }
+    
+    .header .container {
+        padding: var(--spacing-sm) var(--spacing-xs);
+    }
+    
+    .header-stats {
+        flex-direction: column;
+        gap: var(--spacing-sm);
+    }
+    
+    .stat-item {
+        flex-direction: row;
+        gap: var(--spacing-sm);
+    }
+    
+    .logo {
+        font-size: var(--font-lg);
+    }
+    
+    .logo-icon {
+        font-size: var(--font-xl);
+    }
+    
+    .overview-grid {
+        gap: var(--spacing-sm);
+    }
+    
+    .monitor-card {
+        padding: var(--spacing-sm);
+    }
+    
+    .card-title {
+        font-size: var(--font-base);
+    }
+    
+    .section-title {
+        font-size: var(--font-base);
+        margin-bottom: var(--spacing-md);
+    }
+    
+    .main-content {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .gauge-container canvas {
+        max-width: 120px;
+        max-height: 120px;
+    }
+    
+    .gauge-value {
+        font-size: var(--font-lg);
+    }
+    
+    .query-stats {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+    }
+    
+    .stat-number {
+        font-size: var(--font-xl);
+    }
+    
+    .stat-label {
+        font-size: var(--font-xs);
+    }
+    
+    /* Hide query type column on very small screens */
+    .queries-table th:nth-child(4),
+    .queries-table td:nth-child(4) {
+        display: none;
+    }
+    
+    /* Simplify progress bars */
+    .progress-bar {
+        height: 16px;
+    }
+    
+    .progress-label {
+        font-size: var(--font-base);
+    }
+    
+    /* Adjust action buttons */
+    .action-btn {
+        padding: var(--spacing-xs) var(--spacing-sm);
+        font-size: var(--font-xs);
+    }
+    
+    .card-actions {
+        gap: var(--spacing-xs);
+    }
+}
+
+/* Landscape Mobile Styles */
+@media (max-width: 768px) and (orientation: landscape) {
+    .header .container {
+        flex-direction: row;
+        padding: var(--spacing-sm) var(--spacing-md);
+    }
+    
+    .header-stats {
+        flex-direction: row;
+        gap: var(--spacing-md);
+    }
+    
+    .stat-item {
+        flex-direction: column;
+    }
+    
+    .overview-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+    
+    .main-content {
+        padding: var(--spacing-lg) 0;
+    }
+    
+    .queries-table-container {
+        max-height: 250px;
+    }
+}
+
+/* Print Styles */
+@media print {
+    * {
+        color: #000 !important;
+        background: #fff !important;
+        box-shadow: none !important;
+    }
+    
+    .header,
+    .footer,
+    .action-btn,
+    .card-actions,
+    #particles-js,
+    .loading-overlay {
+        display: none !important;
+    }
+    
+    .main-content {
+        padding: 0;
+    }
+    
+    .monitor-card {
+        border: 1px solid #ccc;
+        margin-bottom: 20px;
+        page-break-inside: avoid;
+    }
+    
+    .section-title {
+        page-break-after: avoid;
+    }
+    
+    .queries-table {
+        font-size: 12px;
+    }
+    
+    .queries-table th,
+    .queries-table td {
+        padding: 4px;
+        border: 1px solid #ccc;
+    }
+}
+
+/* High DPI Displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    .logo-icon {
+        image-rendering: -webkit-optimize-contrast;
+        image-rendering: crisp-edges;
+    }
+    
+    .indicator-light {
+        border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+}
+
+/* Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .loading-spinner {
+        animation: none;
+    }
+    
+    .pulse,
+    .glow-effect,
+    .float {
+        animation: none;
+    }
+}
+
+/* High Contrast Mode */
+@media (prefers-contrast: high) {
+    :root {
+        --text-primary: #ffffff;
+        --text-secondary: #ffffff;
+        --bg-primary: #000000;
+        --bg-secondary: #000000;
+        --bg-card: #000000;
+        --border-color: #ffffff;
+        --accent-cyan: #ffffff;
+        --accent-purple: #ffffff;
+        --accent-green: #ffffff;
+    }
+    
+    .monitor-card {
+        border: 2px solid #ffffff;
+    }
+    
+    .progress-bar {
+        border: 2px solid #ffffff;
+    }
+    
+    .action-btn {
+        border: 2px solid #ffffff;
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    /* Already using dark theme as default */
+}
+
+/* Light Mode Override (if needed) */
+@media (prefers-color-scheme: light) {
+    .force-light-mode {
+        --bg-primary: #ffffff;
+        --bg-secondary: #f5f5f5;
+        --bg-tertiary: #eeeeee;
+        --bg-card: rgba(255, 255, 255, 0.95);
+        --text-primary: #000000;
+        --text-secondary: #333333;
+        --text-muted: #666666;
+        --border-color: #cccccc;
+    }
+}
+
+/* Touch Device Optimizations */
+@media (hover: none) and (pointer: coarse) {
+    .action-btn {
+        min-height: 44px;
+        min-width: 44px;
+    }
+    
+    .indicator-light {
+        min-width: 20px;
+        min-height: 20px;
+    }
+    
+    .monitor-card:hover {
+        transform: none;
+    }
+}
+
+/* Fold and Flip Devices */
+@media (max-width: 280px) {
+    .header .container {
+        padding: var(--spacing-xs);
+    }
+    
+    .logo {
+        font-size: var(--font-sm);
+    }
+    
+    .logo-icon {
+        font-size: var(--font-base);
+    }
+    
+    .container {
+        padding: 0 var(--spacing-xs);
+    }
+    
+    .monitor-card {
+        padding: var(--spacing-xs);
+    }
+    
+    .overview-grid {
+        gap: var(--spacing-xs);
+    }
+    
+    .queries-table {
+        font-size: 10px;
+    }
+    
+    .queries-table th,
+    .queries-table td {
+        padding: 2px;
+    }
+    
+    /* Show only essential columns */
+    .queries-table th:nth-child(n+3),
+    .queries-table td:nth-child(n+3) {
+        display: none;
+    }
+    
+    .queries-table th:nth-child(2),
+    .queries-table td:nth-child(2) {
+        display: table-cell;
+    }
+}
