@@ -33,11 +33,12 @@ logger = logging.getLogger(__name__)
 # Initialize Flask app
 app = Flask(__name__, 
             static_folder='../frontend',
+            static_url_path='',
             template_folder='../frontend')
 app.config['SECRET_KEY'] = 'dns-monitor-secret-key-2024'
 
 # Initialize SocketIO
-socketio = SocketIO(app, cors_allowed_origins="*", async_mode='eventlet')
+socketio = SocketIO(app, cors_allowed_origins="*", async_mode='threading')
 
 # Initialize monitors
 system_monitor = SystemMonitor()
@@ -101,6 +102,11 @@ monitor_app = DNSMonitorApp()
 def index():
     """Main monitoring page"""
     return render_template('index.html')
+
+@app.route('/favicon.ico')
+def favicon():
+    """Serve favicon"""
+    return app.send_static_file('favicon.ico')
 
 @app.route('/api/system/stats')
 def get_system_stats():
@@ -189,7 +195,7 @@ if __name__ == '__main__':
         
         # Start Flask app
         logger.info("Starting DNS Monitor server...")
-        socketio.run(app, host='0.0.0.0', port=5000, debug=False)
+        socketio.run(app, host='0.0.0.0', port=5000, debug=True)
         
     except KeyboardInterrupt:
         logger.info("Shutting down...")
